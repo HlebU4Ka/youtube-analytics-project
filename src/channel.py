@@ -13,8 +13,6 @@ class Channel:
         """Экземпляр инициализируется id канала. Дальше все данные будут подтягиваться по API."""
         self.__channel_id = channel_id
 
-
-
         try:
             channel = self.youtube.channels().list(id=self.__channel_id, part='snippet,statistics').execute()
 
@@ -27,8 +25,14 @@ class Channel:
         except Exception as e:
             print("Error", str(e))
 
+    @property
+    def channel_id(self):
+        return self.__channel_id
+
+
     def __str__(self):
         return f"{self.title}({self.url})"
+
 
     def __add__(self, other):
         if isinstance(other, Channel):
@@ -36,11 +40,13 @@ class Channel:
         else:
             raise TypeError("Unsupported operand type for +")
 
+
     def __sub__(self, other):
         if isinstance(other, Channel):
             return int(self.subscriber_count) - int(other.subscriber_count)
         else:
             raise TypeError("Unsupported operand type for -")
+
 
     def __lt__(self, other):
         if isinstance(other, Channel):
@@ -48,11 +54,13 @@ class Channel:
         else:
             raise TypeError("Unsupported operand type for <")
 
+
     def __le__(self, other):
         if isinstance(other, Channel):
             return int(self.subscriber_count) <= int(other.subscriber_count)
         else:
             raise TypeError("Unsupported operand type for <=")
+
 
     def __gt__(self, other):
         if isinstance(other, Channel):
@@ -60,17 +68,20 @@ class Channel:
         else:
             raise TypeError("Unsupported operand type for >")
 
+
     def __ge__(self, other):
         if isinstance(other, Channel):
             return int(self.subscriber_count) >= int(other.subscriber_count)
         else:
             raise TypeError("Unsupported operand type for >=")
 
+
     def __eq__(self, other):
         if isinstance(other, Channel):
             return int(self.subscriber_count) == int(other.subscriber_count)
         else:
             raise TypeError("Unsupported operand type for ==")
+
 
     @classmethod
     def get_service(cls):
@@ -85,6 +96,7 @@ class Channel:
         channel = self.youtube.channels().list(id=self.__channel_id, part='snippet,statistics').execute()
 
         print(json.dumps(channel, indent=2, ensure_ascii=False))
+
 
     def to_json(self, file_name):
         """Сохраняет в файл значения атрибутов экземпляра `Channel`"""
