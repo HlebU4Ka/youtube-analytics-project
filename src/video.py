@@ -23,7 +23,7 @@ class Video:
                 part='snippet, statistics',
                 id=self.id_video
             ).execute()
-            video = response['item'][0]
+            video = response['items'][0]
 
             self.title = video['snippet']['title']
             self.url = 'https://www.youtube.com/watch?v=' + self.id_video
@@ -37,10 +37,9 @@ class Video:
 
 
 class PLVideo(Video):
-    def __init__(self, playlist_id, id_video):
+    def __init__(self, id_video, playlist_id):
         super().__init__(id_video)
         self.playlist_id = playlist_id
 
     def __str__(self):
         return self.title
-
