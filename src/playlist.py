@@ -1,27 +1,29 @@
-from src.channel import Channel
 import datetime
+from googleapiclient.discovery import build
 
 
-class PlayList(Channel):
-    tracks = []
+class PlayList:
+    api_key: str = "AIzaSyBIE1Zoz-q-0QXM1H8hp3e_N9xnuT_9xfI"
+    youtube = build('youtube', 'v3', developerKey=api_key)
 
-    def __init__(self, title, url, playlist_id):
-        super().__init__(url, title)
+    def __init__(self, playlist_id):
         self.playlist_id = playlist_id
-
-    def add_track(self, track_duration):
-        self.tracks.append(track_duration)
+        playlist_info = self.youtube.playlists().list(
+            part='snippet',
+            id=self.playlist_id
+        ).execute()
+        self.title = playlist_info['items'][0]['snippet']['localized']['title']
+        self.url = 'https://www.youtube.com/playlist?list=' + self.playlist_id
+        self.videos = []
 
     @property
     def total_duration(self):
-        total = datetime.timedelta()
-        for track in self.tracks:
-            total += track
-        return total
+        duration = datetime.timedelta()
+        for video in self.videos:
+            duration += video["duration"]
+        return duration
 
-    def show_best_videos(self):
-        if not self.videos:
-            return None
+    def show_best_video(self):
+        best_video = max(self.videos, key=lambda video: video["likes"])
+        return best_video["url"]
 
-        best_video = max(self.videos, key=lambda video: video.likes)
-        return best_video.url
