@@ -18,6 +18,11 @@ class Video:
         количество лайков
         """
         self.id_video = id_video
+        self.title = None
+        self.url = None
+        self.view_count = None
+        self.view_likes = None
+
         try:
             response = self.youtube.videos().list(
                 part='snippet, statistics',
@@ -31,6 +36,7 @@ class Video:
             self.view_likes = video['statistics']['likeCount']
         except Exception as e:
             print("Error", str(e))
+
 
     def __str__(self):
         return self.title
